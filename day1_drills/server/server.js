@@ -19,165 +19,164 @@
     // }
     // create new script tag for nodemon: in "scripts" add "dev": "nodemon server.js"
 
-    const express = require( "express" );
-    const cors = require( "cors" );
-    
-    var server = express( );
-    var port = 8080;
-    
-    // Middleware
-    server.use( express.urlencoded( {
-        extended: false
-    } ) );
-    server.use( cors( ) );
-    
-    // Data
-    var numbers = [ 2, 3, 5, 6 ];
-    var items = [
-        {
-            name: "T-shirt",
-            price: 2.99,
-            tags: {
-                type: "Clothing",
-                color: "Black",
-                sale: true
-            }
-        },
-        {
-            name: "Mug",
-            price: 5.99,
-            tags: {
-                type: "Dishware",
-                color: "Black",
-                sale: false
-            },
-            // keywords: [
-            //     "Lord of the Rings",
-            //     "LotR",
-            //     "Fellowship of the Ring"
-            // ]
-        },
-        {
-            name: "Ring",
-            price: 7.99,
-            tags: {
-                type: "Accessory",
-                color: "Purple",
-                sale: false
-            }
-        },
-    ]
-    
-    // Helper functions
-    var noNumbers = function ( ) {
-        return !numbers;
-    };
-    
-    var total = function ( numbers ) {
-        var total = 0;
-        numbers.forEach( function( number ) {
-            total += number;
-        });
-        return total;
-    };
-    
-    var average = function ( numbers ) {
-        var total = total( numbers );
-        return total / numbers.length;
-    };
-    
-    // REST endpoints
-    server.get( "/numbers", function ( req, res ) {
-        // console.log( req.path );
-        // console.log( numbers );
-        if ( !numbers ) {
-            res.status( 404 );
-            var response = {
-                msg: "We do not have the list of numbers you asked for"
-            };
-            res.json( response );
-        } else {
-            var response = {
-                numbers: numbers
-            };
-            res.status( 200 );
-            res.json( response );
-        }
-    });
-    
-    server.get( "/numbers/total", function ( req, res ) {
-        var t = total( numbers );
-        var response = {
-            total: t
-        };
-        res.json( response );
-    });
-    
-    server.get( "/numbers/average", function( req, res ) {
-        var a = average( numbers );
-        var response = {
-            average: a
-        };
-        res.json( response );
-    });
-    
-    var filterItems = function ( items, body ) {
-        var filtered_list = items;
-        for ( var key in body ) {
-            // console.log( body[ key ] );
-            filtered_list = filtered_list.filter( function ( item ) {
-                if ( body[ key ] == item.tags[ key ] ) {
-                    return true;
-                } else {
-                    return false;
-                }
-            });
+const express = require( "express" );
+const cors = require( "cors" );
 
-            // Example of what .filter is doing
-            // var new_list = [ ];
-            // names.forEach( function( name ) {
-            //     if ( name == 'bob' ) {
-            //         new_list.push( name );
-            //     }
-            // });
+var server = express( );
+var port = 8080;
+
+// Middleware
+server.use( express.urlencoded( {
+    extended: false
+} ) );
+server.use( cors( ) );
+
+// Data
+var numbers = [ 2, 3, 5, 6 ];
+var items = [
+    {
+        name: "T-shirt",
+        price: 2.99,
+        tags: {
+            type: "Clothing",
+            color: "Black",
+            sale: true
         }
-        return filtered_list;
-    }
-    
-    server.get( "/items", function( req, res ) {
-        console.log( req.body );
-        var filtered_list = items;
-    
-        // if ( req.body.color ) {
-        //     filtered_list = filtered_list.filter( function( item ) {
-        //         if ( item.tags.color == req.body.color ) {
-        //             return true;
-        //         } else {
-        //             return false;
-        //         }
-        //     });
-        // }
-        // if ( req.body.type ) {
-        //     filtered_list = filtered_list.filter( function( item ) {
-        //         return item.tags.type == req.body.type;
-        //     })
-        // }
-        // if ( req.body.sale ) {
-        //     filtered_list = filtered_list.filter( function( item ) {
-        //         return item.tags.sale == req.body.sale;
-        //     })
-        // }
-    
-        filtered_list = filterItems( items, req.body );
-        
-        var response = {
-            items: filtered_list
+    },
+    {
+        name: "Mug",
+        price: 5.99,
+        tags: {
+            type: "Dishware",
+            color: "Black",
+            sale: false
+        },
+        // keywords: [
+        //     "Lord of the Rings",
+        //     "LotR",
+        //     "Fellowship of the Ring"
+        // ]
+    },
+    {
+        name: "Ring",
+        price: 7.99,
+        tags: {
+            type: "Accessory",
+            color: "Purple",
+            sale: false
         }
-        res.json( response );
+    },
+]
+
+// Helper functions
+var noNumbers = function ( ) {
+    return !numbers;
+};
+
+var total = function ( numbers ) {
+    var total = 0;
+    numbers.forEach( function( number ) {
+        total += number;
     });
+    return total;
+};
+
+var average = function ( numbers ) {
+    var total = total( numbers );
+    return total / numbers.length;
+};
+
+// REST endpoints
+server.get( "/numbers", function ( req, res ) {
+    // console.log( req.path );
+    // console.log( numbers );
+    if ( !numbers ) {
+        res.status( 404 );
+        var response = {
+            msg: "We do not have the list of numbers you asked for"
+        };
+        res.json( response );
+    } else {
+        var response = {
+            numbers: numbers
+        };
+        res.status( 200 );
+        res.json( response );
+    }
+});
+
+server.get( "/numbers/total", function ( req, res ) {
+    var t = total( numbers );
+    var response = {
+        total: t
+    };
+    res.json( response );
+});
+
+server.get( "/numbers/average", function( req, res ) {
+    var a = average( numbers );
+    var response = {
+        average: a
+    };
+    res.json( response );
+});
+
+var filterItems = function ( items, body ) {
+    var filtered_list = items;
+    for ( var key in body ) {
+        // console.log( body[ key ] );
+        filtered_list = filtered_list.filter( function ( item ) {
+            if ( body[ key ] == item.tags[ key ] ) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        // Example of what .filter is doing
+        // var new_list = [ ];
+        // names.forEach( function( name ) {
+        //     if ( name == 'bob' ) {
+        //         new_list.push( name );
+        //     }
+        // });
+    }
+    return filtered_list;
+}
+
+server.get( "/items", function( req, res ) {
+    console.log( req.body );
+    var filtered_list = items;
+
+    // if ( req.body.color ) {
+    //     filtered_list = filtered_list.filter( function( item ) {
+    //         if ( item.tags.color == req.body.color ) {
+    //             return true;
+    //         } else {
+    //             return false;
+    //         }
+    //     });
+    // }
+    // if ( req.body.type ) {
+    //     filtered_list = filtered_list.filter( function( item ) {
+    //         return item.tags.type == req.body.type;
+    //     })
+    // }
+    // if ( req.body.sale ) {
+    //     filtered_list = filtered_list.filter( function( item ) {
+    //         return item.tags.sale == req.body.sale;
+    //     })
+    // }
+
+    filtered_list = filterItems( items, req.body );
     
-    // Start server
-    server.listen( port, function ( ) {
-        console.log( `Listening on port ${ port }` );
-    } );
-    
+    var response = {
+        items: filtered_list
+    }
+    res.json( response );
+});
+
+// Start server
+server.listen( port, function ( ) {
+    console.log( `Listening on port ${ port }` );
+} );
