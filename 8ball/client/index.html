@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <div id="app" v-cloak>
+
+        <!-- 8Ball -->
+        <div id="eight-ball">
+            <div id="eight-ball-answer">
+                <p v-bind:class="{ eight: answer == 8 }">{{ answer }}</p>
+            </div>
+        </div>
+
+        <!-- Heading -->
+        <h1>8Ball</h1>
+        <h4>Go ahead, ask a question.</h4>
+
+        <!-- Input -->
+        <input type="text" v-model="question" v-on:keyup="checkQuestion( )">
+        <p>{{ feedback }}</p>
+        <button v-on:click="askQuestion( )" v-bind:disabled="disabled">ask</button>
+
+    </div>
+
+    <!-- Flip scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <!-- <script src="vue.js"></script> -->
+    <!--  -->
+    <script src="code.js"></script>
+</html>
