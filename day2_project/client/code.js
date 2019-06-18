@@ -70,25 +70,33 @@ var app = new Vue ( {
 		rollDice: function ( ) {
 			this.yahtzee = false;
 
-			var new_dice_rolls = [ ];
-			for ( var i = 0; i < 5; i++ ) {
-				var roll = Math.floor( Math.random( ) * 6 ) + 1;
-				new_dice_rolls.push( roll );
-			}
-			this.yahtzee_rolls = new_dice_rolls;
-			// this.yahtzee_rolls = [ 1, 1, 1, 1, 1 ]; // testing yahtzee
-			this.num_rolls += 1;
-
-			if ( this.yahtzee_rolls[ 0 ] == this.yahtzee_rolls[ 1 ] ) {
-				if ( this.yahtzee_rolls[ 1 ] == this.yahtzee_rolls[ 2 ] ) {
-					if ( this.yahtzee_rolls[ 2 ] == this.yahtzee_rolls[ 3 ] ) {
-						if ( this.yahtzee_rolls[ 3 ] == this.yahtzee_rolls[ 4 ] ) {
-							this.yahtzee = true;
-							this.num_yahtzees += 1;
+			// var new_dice_rolls = [ ];
+			// for ( var i = 0; i < 5; i++ ) {
+			// 	var roll = Math.floor( Math.random( ) * 6 ) + 1;
+			// 	new_dice_rolls.push( roll );
+			// }
+			// this.yahtzee_rolls = new_dice_rolls;
+			// // this.yahtzee_rolls = [ 1, 1, 1, 1, 1 ]; // testing yahtzee
+			// this.num_rolls += 1;
+			
+			fetch( "http://localhost:8080/yahtzee-roll" ).then( function ( response ) {
+				response.json( ).then( function ( data ) {
+					// console.log( data.rolls );
+					app.yahtzee_rolls = data.rolls;
+					app.num_rolls += 1;
+					if ( app.yahtzee_rolls[ 0 ] == app.yahtzee_rolls[ 1 ] ) {
+						if ( app.yahtzee_rolls[ 1 ] == app.yahtzee_rolls[ 2 ] ) {
+							if ( app.yahtzee_rolls[ 2 ] == app.yahtzee_rolls[ 3 ] ) {
+								if ( app.yahtzee_rolls[ 3 ] == app.yahtzee_rolls[ 4 ] ) {
+									app.yahtzee = true;
+									app.num_yahtzees += 1;
+								}
+							}
 						}
 					}
-				}
-			}
+				});
+			});
+			
 		},
 
 		getRandomFact: function ( ) {
