@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Hello world!</title>
+		<link rel="stylesheet" href="style.css">
+	</head>
+
+	<div id="app" v-cloak>
+		<h1>{{ greeting }}</h1>
+
+		<div v-if="!started">
+			<p>To begin, click the button below!</p>
+			<button v-on:click="start( )">start</button>
+		</div>
+
+		<div v-else>
+			<button v-on:click="page = 'yahtzee'">Yahtzee</button>
+			<button v-on:click="page = 'fact'">Fact Checker</button>
+
+			<div v-if="page == 'yahtzee'">
+				<h3>Yahtzee</h3>
+				<p>Roll the dice, if every number is the same, say YAHTZEE!</p>
+				
+				<p>
+					<span v-for="roll in yahtzee_rolls">{{ roll }} </span>
+				</p>
+				
+				<button v-on:click="rollDice( )">roll</button>
+				
+				<p>You have rolled Yahtzee {{ num_yahtzees }} times out of {{ num_rolls }} rolls.</p>
+				<p v-if="yahtzee">YAHTZEE!!!</p>
+				
+				<br><br><br>
+			</div>	
+
+			<div v-if="page =='fact'">
+				<h3>Fact quiz</h3>
+				<p>{{ current_fact.text }}, True or False?</p>
+
+				<div v-if="!have_guessed_fact">
+					<button v-on:click="factCheck( true )">True</button>
+					<button v-on:click="factCheck( false )">False</button>
+				</div>
+				<div v-else>
+					<button v-on:click="getRandomFact( )">next</button>
+				</div>
+				<br>
+
+				<p>{{ fact_feedback }}</p>
+				<p>You have gotten {{ correct_facts }} / {{ correct_facts + incorrect_facts }} right!</p>
+	
+				<br><br><br>
+			</div>
+
+			<div v-if="show_math">
+				<h3>Math quiz</h3>
+				<p>What is the answer to this question:</p>
+				
+				<p>{{ question.number1 }} {{ question.operator }} {{ question.number2 }} = {{ displayedAnswer }}</p>
+	
+				<div>
+					<span>Enter your answer here:</span>
+					<input type="text" v-model="guess" v-on:keyup.enter="checkAnswer( )">
+				</div>
+				<br>
+	
+				<button v-if="!guessed" v-on:click="checkAnswer( )">check</button>
+				<button v-else v-on:click="nextQuestion( )">next</button>
+	
+				<p>{{ feedback }}</p>
+				<p>It took you {{ time_taken }} seconds to solve that one, that's {{ speed }}!</p>
+				<p>You have gotten {{ correct }} / {{ correct + incorrect }} right.</p>
+				<p>Your rank: {{ rank }}</p>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+	<script src="code.js"></script>
+</html>
