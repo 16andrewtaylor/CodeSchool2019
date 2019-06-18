@@ -5,19 +5,22 @@ var server = express( );
 var port = 8080;
 
 // Data
+var data = require( "./data.js" );
+console.log( data );
+
 var numbers = [
     1, 2, 5, 2, 5, 7, 4
 ];
-var stoplight_color = "RED";
-setInterval( function ( ) {
-    if ( stoplight_color == "RED" ) {
-        stoplight_color = "GREEN";
-    } else if ( stoplight_color == "GREEN" ) {
-        stoplight_color = "YELLOW";
-    } else if ( stoplight_color == "YELLOW" ) {
-        stoplight_color = "RED";
-    }
-}, 5000 );
+// var stoplight_color = "RED";
+// setInterval( function ( ) {
+//     if ( data.stoplight_color == "RED" ) {
+//         data.stoplight_color = "GREEN";
+//     } else if ( data.stoplight_color == "GREEN" ) {
+//         data.stoplight_color = "YELLOW";
+//     } else if ( data.stoplight_color == "YELLOW" ) {
+//         data.stoplight_color = "RED";
+//     }
+// }, 5000 );
 var movies_all = [
     "What about Bob?",
     "Avengers",
@@ -83,7 +86,7 @@ server.get( "/numbers/go-fish", function ( req, res ) {
 
 server.get( "/stoplight", function ( req, res ) {
     var response = {
-        color: stoplight_color
+        color: data.stoplight_color
     };
     res.json( response );
 });
@@ -104,7 +107,7 @@ server.get( "/movienight", function ( req, res ) {
     if ( req.body.age > 50 ) {
         selected_movies = selected_movies.concat( movies_elderly );
     }
-    
+
     // Picking the movie from selected_movies
     var random_index = Math.floor( Math.random( ) * selected_movies.length );
     var movie = selected_movies[ random_index ];
