@@ -25,6 +25,16 @@
 		<p v-if="age_group != '' ">You are a(n) {{ age_group }}</p>
 		<input type="number" v-model="age">
 		<button v-on:click="loadAgeGroup( )">load age group</button>
+
+		<br><br><br>
+
+		<ul>
+			<li v-for="number in numbers">{{ number }}</li>
+		</ul>
+		<button v-on:click="loadNumbers( )">load numbers</button>
+		<br>
+		<input type="number" v-model="new_number">
+		<button v-on:click="submitNewNumber( )">submit</button>
 	</div>
 
 	<script src="https://cdn.jsdelivr.net/npm/vue"></script>

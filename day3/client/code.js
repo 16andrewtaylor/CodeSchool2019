@@ -10,10 +10,13 @@ var app = new Vue ( {
 		counter: 0,
 		age_group: "",
 		age: 0,
+		numbers: [ ],
+		new_number: 0,
 	},
 
 	created: function ( ) {
 		this.loadNames( );
+		this.loadNumbers( );
 	},
 
 	methods: {
@@ -62,6 +65,36 @@ var app = new Vue ( {
 				} else if ( response.status == 201 ) {
 					console.log( "Added" );
 					app.loadNames( );
+				}
+			});
+		},
+
+		loadNumbers: function ( ) {
+			fetch( "http://localhost:8080/numbers" ).then( function ( response ) {
+				response.json( ).then( function ( data ) {
+					app.numbers = data.numbers;
+				});
+			});
+		},
+		submitNewNumber: function ( ) {
+			var req_body = {
+				number: this.new_number
+			};
+
+			fetch( "http://localhost:8080/numbers", {
+				method: "POST",
+				headers: {
+					"Content-type": "application/json"
+				},
+				body: JSON.stringify( req_body )
+			} ).then( function ( response ) {
+				if ( response.status == 400 ) {
+					response.json( ).then( function ( data ) {
+						alert( data.msg );
+					})
+				} else if ( response.status == 201 ) {
+					console.log( "Added" );
+					app.loadNumbers( );
 				}
 			});
 		}
