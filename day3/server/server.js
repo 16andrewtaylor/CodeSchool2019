@@ -52,6 +52,38 @@ server.post( "/larry", function ( req, res ) {
     res.send( );
 });
 
+// GET /numbers
+server.get( "/numbers", function ( req, res ) {
+    var response = {
+        numbers: data.numbers
+    };
+    res.json( response );
+});
+
+// POST /numbers
+server.post( "/numbers", function ( req, res ) {
+    if ( !req.body.number ) {
+        res.status( 400 );
+        var response = {
+            msg: "Please send a number you want to add"
+        };
+        res.json( response );
+    } else {
+        // console.log( isNaN( req.body.number ) );
+        if ( isNaN( req.body.number ) ) {
+            res.status( 400 );
+            var response = {
+                msg: "Please enter a valid number"
+            };
+            res.json( response );
+        } else {
+            data.numbers.push( Number( req.body.number ) );
+            res.status( 201 );
+            res.send( );
+        }
+    }
+});
+
 // GET /hotcold
 server.get( "/hotcold", function ( req, res ) {
     if ( req.body.guess > 100 || req.body.guess < 1 ) {
