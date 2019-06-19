@@ -23,6 +23,35 @@ server.get( "/names", function ( req, res ) {
     res.json( response );
 });
 
+// POST /names
+server.post( "/names", function ( req, res ) {
+    // check if there even is a req.body.name and that its not "", status 400
+    if ( !req.body.name ) {
+        res.status( 400 );
+        var response = {
+            msg: "Please send a name you want to add"
+        };
+        res.json( response );
+    } else if ( req.body.name == "" ) {
+        res.status( 400 );
+        var response = {
+            msg: "Please enter an actual name"
+        };
+        res.json( response );
+    } else {
+        data.names.push( req.body.name );
+        res.status( 201 );
+        res.send( );
+    }
+});
+
+// POST /larry
+server.post( "/larry", function ( req, res ) {
+    data.names.push( "Larry" );
+    res.status( 201 );
+    res.send( );
+});
+
 // GET /hotcold
 server.get( "/hotcold", function ( req, res ) {
     if ( req.body.guess > 100 || req.body.guess < 1 ) {
