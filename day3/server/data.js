@@ -8,6 +8,7 @@ var data = {
         "Curtis",
         "Larry",
     ],
+    number: Math.floor( Math.random( ) * 100 ) + 1,
 };
 
 module.exports = data;
