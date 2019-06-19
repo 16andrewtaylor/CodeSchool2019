@@ -115,9 +115,14 @@ server.get( "/hotcold", function ( req, res ) {
 server.get( "/age-group", function ( req, res ) {
     var age_group = "";
 
-    if ( req.body.age < 15 ) {
+    // console.log( req.path );
+    // console.log( req.query );
+
+    var num = Number( req.query.age );
+
+    if ( num < 15 ) {
         age_group = "Child";
-    } else if ( req.body.age < 40 ) {
+    } else if ( num < 50 ) {
         age_group = "Middle aged";
     } else {
         age_group = "Elder";
