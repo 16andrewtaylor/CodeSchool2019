@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <div id="app" v-cloak>
+        <h1>Todo App</h1>
+		
+		<div>
+			<input type="text" v-model="new_todo_input" placeholder="Enter a new todo here">
+			<button v-on:click="addNewTodo( )">add</button>
+		</div>
+
+		<ul id="todos">
+			<li class="todo" v-for="todo in todos">
+				<input type="checkbox" 
+					v-model="todo.completed"
+					v-on:click="saveTodoCompleted( todo )">
+				<p v-if="!todo.editing"
+					v-bind:class="{ completed: todo.completed }"
+					v-on:dblclick="todo.editing = true">
+					{{ todo.name }}
+				</p>
+				<input type="text"
+					v-if="todo.editing"
+					v-model="todo.name"
+					v-on:keyup.enter="saveTodoName( todo )">
+				<button v-on:click="deleteTodo( todo )">delete</button>
+			</li>
+		</ul>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="code.js"></script>
+</html>

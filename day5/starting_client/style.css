@@ -1,0 +1,46 @@
+[v-cloak] {
+	display: none;
+}
+
+#app {
+	text-align: center;
+}
+
+#todos {
+	width: 400px;
+	margin: 10px auto;
+	text-align: left;
+	max-height: 500px;
+	overflow: scroll;
+	border: 1px solid black;
+	padding: 10px;
+	padding-bottom: 0px;
+}
+
+.todo {
+	list-style: none;
+	border: 1px solid black;
+	padding: 5px;
+	margin-bottom: 10px;
+	height: 18px;
+}
+
+.todo input {
+	float: left;
+	margin-right: 5px;
+}
+
+.todo button {
+	float: right;
+	margin-left: 5px;
+}
+
+.todo p {
+	display: inline;
+	margin: 0px;
+	padding: 0px;
+}
+
+.completed {
+	text-decoration: line-through;
+}
