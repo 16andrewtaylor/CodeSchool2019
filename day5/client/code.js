@@ -73,11 +73,48 @@ var app = new Vue( {
         },
 		saveTodoName: function ( todo ) {
 			console.log( "Editing todo name" );
-			todo.editing = false;
+			var req_body = {
+				name: todo.name
+			};
+			fetch( `${ url }/todos/${ todo.id }`, {
+				method: "PUT",
+				headers: {
+					"Content-type": "application/json"
+				},
+				body: JSON.stringify( req_body )
+			}).then( function ( response ) {
+				if ( response.status == 400 || response.status == 404 ) {
+					response.json( ).then( function ( data ) {
+						alert( data.msg );
+					});
+				} else if ( response.status == 204 ) {
+					todo.editing = false;
+					app.getTodos( );
+				}
+			});
 		},
 		saveTodoCompleted: function ( todo ) {
 			console.log( "Editing todo completed" );
 			// Don't need this function initially, only when we are adding the fetch to the server
+			var req_body = {
+				completed: !todo.completed // we need to send !todo.completed because the v-on:click happens before the v-model updates the value
+			};
+			fetch( `${ url }/todos/${ todo.id }`, {
+				method: "PUT",
+				headers: {
+					"Content-type": "application/json"
+				},
+				body: JSON.stringify( req_body )
+			}).then( function ( response ) {
+				if ( response.status == 400 || response.status == 404 ) {
+					response.json( ).then( function ( data ) {
+						alert( data.msg );
+					});
+				} else if ( response.status == 204 ) {
+					todo.editing = false;
+					app.getTodos( );
+				}
+			});
 		}
     }
 } );
