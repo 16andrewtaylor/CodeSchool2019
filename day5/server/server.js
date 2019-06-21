@@ -18,6 +18,7 @@ server.use( function ( req, res, next ) {
 var data = require( "./data.js" );
 
 // Endpoints
+// GET /todos
 server.get( "/todos", function ( req, res ) {
     var response = {
         todos: data.todos
