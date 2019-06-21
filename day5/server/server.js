@@ -26,6 +26,38 @@ server.get( "/todos", function ( req, res ) {
     res.json( response );
 });
 
+// POST /todos
+server.post( "/todos", function ( req, res ) {
+    if ( req.body.name == undefined ) {
+        // They did not send a name for the new todo
+        var response = {
+            msg: "You need to send a name field"
+        };
+        res.status( 400 );
+        res.json( response );
+    } else if ( req.body.name == "" ) {
+        // The name was empty
+        var response = {
+            msg: "Please enter a name for the new todo"
+        };
+        res.status( 400 );
+        res.json( response );
+    } else {
+        // Add the new todo to the list of todos
+        var new_todo = {
+            id: uuid.v4( ),
+            name: req.body.name,
+            completed: false,
+            editing: false,
+            created_on: new Date( )
+        };
+        data.todos.unshift( new_todo );
+        // Send the reponse
+        res.status( 201 );
+        res.send( );
+    }
+});
+
 // Start the server
 server.listen( port, function ( ) {
     console.log( `Listening on port ${ port }` );

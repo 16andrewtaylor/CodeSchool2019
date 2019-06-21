@@ -1,4 +1,5 @@
-
+const url = "http://localhost:3000";
+// const url = "https://codeschool-todo-server.herokuapp.com";
 
 var app = new Vue( {
 	el: "#app",
@@ -31,22 +32,34 @@ var app = new Vue( {
     methods: {
 		getTodos: function ( ) {
 			console.log( "Getting todos" );
-			fetch( "http://localhost:3000/todos" ).then( function ( response ) {
+			fetch( `${ url }/todos` ).then( function ( response ) {
 				response.json( ).then( function ( data ) {
-					console.log( data );
+					// console.log( data );
 					app.todos = data.todos;
 				});
 			});
 		},
         addNewTodo: function ( ) {
 			console.log( "Adding new todo" );
-            var new_todo = { 
-                name: this.new_todo_input,
-				completed: false,
-				editing: false,
-            };
-            this.todos.unshift( new_todo );
-            this.new_todo_input = "";
+			var req_body = {
+				name: this.new_todo_input
+			};
+			fetch( `${ url }/todos`, {
+				method: "POST",
+				headers: {
+					"Content-type": "application/json"
+				},
+				body: JSON.stringify( req_body )
+			}).then( function ( response ) {
+				if ( response.status == 400 ) {
+					response.json( ).then( function ( data ) {
+						alert( data.msg );
+					})
+				} else if ( response.status == 201 ) {
+					app.new_todo_input = "";
+					app.getTodos( );
+				}
+			});
         },
         deleteTodo: function ( todo ) {
 			console.log( "Deleting todo" );
