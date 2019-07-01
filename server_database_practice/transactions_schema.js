@@ -4,6 +4,7 @@ const transactionSchema = mongoose.Schema({
     number: {
         type: Number,
         required: true,
+        default: Math.floor(Math.random() * 1000000)
     },
     amount: {
         type: Number,

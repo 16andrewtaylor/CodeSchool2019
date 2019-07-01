@@ -4,22 +4,27 @@ const playlistSchema = mongoose.Schema({
     title: {
         type: String,
         required: true,
+        default: "Unknown"
     },
     artist: {
         type: String,
         required: true,
+        default: "Unknown"
     },
     seconds: {
         type: Number,
         required: true,
+        default: 0
     },
     album: {
         type: String,
         required: true,
+        default: "Unknown"
     },
     genre: {
         type: String,
         required: true,
+        default: "Unknown"
     },
     date: {
         type: String,
