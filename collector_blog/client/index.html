@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <div id="app" v-cloak>
+        <v-app>
+            <v-content>
+                <v-toolbar fixed app>
+                    <v-toolbar-side-icon @click="drawer = !drawer"></v-toolbar-side-icon>
+                    <v-toolbar-title>A Collector's Blog</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <v-toolbar-items>
+                        <v-btn flat v-on:click="page = 'blog'">blog</v-btn>
+                        <v-btn flat v-on:click="page = 'post'">post</v-btn>
+                        <v-btn flat @click="page = 'login'">login</v-btn>
+                        <v-btn flat @click="page = 'register'">reg</v-btn>
+                    </v-toolbar-items>
+                </v-toolbar>
+                <v-navigation-drawer app v-model="drawer">
+                    <v-list>
+                        <v-list-tile 
+                            v-for="category in categories"
+                            @click="selectCategory(category)">
+                            <v-list-content>
+                                <v-list-tile-title>
+                                    {{category}}
+                                </v-list-tile-title>
+                            </v-list-content>
+                        </v-list-tile>
+                    </v-list>
+                </v-navigation-drawer>
+                <v-container grid-list-lg fluid v-if="page == 'blog'">
+                    <v-layout>
+                        <v-flex xs3></v-flex>
+                        <v-flex xs6 text-xs-center>
+                            <div class="display-3 text-uppercase">Posts</div>
+                            <v-select
+                                :items="categories"
+                                v-model="selected_category"
+                                outline
+                                color="grey"
+                                label="Select a category">
+                            </v-select>
+                            <v-layout column>
+                                <v-flex v-for="post in sorted_posts">
+                                    <v-card elevation="18">
+                                        <v-btn
+                                            icon
+                                            class="right"
+                                            v-if="show_delete"
+                                            @click="deletePost(post)">
+                                            <v-icon color="red">delete</v-icon>
+                                        </v-btn>
+                                        <v-btn
+                                            icon
+                                            class="right"
+                                            @click="editPost(post)">
+                                            <v-icon>edit</v-icon>
+                                        </v-btn>
+                                        <v-img
+                                            v-bind:src="post.image"
+                                            height="200">
+                                        </v-img>
+                                        <v-card-title>
+                                            <span class="headline text-uppercase">
+                                                {{post.title}}
+                                                <span class="grey--text text-lighten-1 caption">
+                                                    by, {{post.author}}
+                                                </span>
+                                            </span>
+                                            <v-spacer></v-spacer>
+                                            <span class="body-1">{{formatDate(post)}}</span>
+                                        </v-card-title>
+                                        <v-expansion-panel>
+                                            <v-expansion-panel-content>
+                                                <template v-slot:header>
+                                                    <div>Read me!</div>
+                                                </template>
+                                                <v-card>
+                                                    <v-card-text>
+                                                        {{post.text}}
+                                                    </v-card-text>
+                                                </v-card>
+                                            </v-expansion-panel-content>
+                                        </v-expansion-panel>
+                                    </v-card>
+                                </v-flex>
+                            </v-layout>
+                        </v-flex>
+                        <v-flex xs3></v-flex>
+                    </v-layout>
+                </v-container>
+                <v-container v-if="page == 'post'">
+                    <v-layout>
+                        <v-flex xs3></v-flex>
+                        <v-flex xs6>
+                            <v-card elevation="18">
+                                <v-card-title class="display-1 justify-center">Create Post</v-card-title>
+                                <v-card-text>
+                                    <v-text-field
+                                        label="Title"
+                                        v-model="new_title"
+                                        outline
+                                        color="grey">
+                                    </v-text-field>
+                                    <v-text-field
+                                        label="Author"
+                                        v-model="new_author"
+                                        outline
+                                        color="grey">
+                                    </v-text-field>
+                                    <v-select
+                                        :items="categories"
+                                        v-model="new_category"
+                                        outline
+                                        color="grey"
+                                        label="Select a category">
+                                    </v-select>
+                                    <v-text-field
+                                        label="Image Link"
+                                        v-model="new_image"
+                                        outline
+                                        color="grey">
+                                    </v-text-field>
+                                    <v-textarea
+                                        outline
+                                        v-model="new_text"
+                                        label="Text"
+                                        color="grey">
+                                    </v-textarea>
+                                </v-card-text>
+                                <v-card-actions>
+                                    <v-btn block @click="addPost()">post</v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-flex>
+                        <v-flex xs3></v-flex>
+                    </v-layout>
+                </v-container>
+                <v-container v-if="page == 'edit'">
+                    <v-layout>
+                        <v-flex xs3></v-flex>
+                        <v-flex xs6>
+                            <v-card elevation="18">
+                                <v-card-title class="display-1 justify-center">Edit Post</v-card-title>
+                                <v-card-text>
+                                    <v-text-field
+                                        label="Title"
+                                        v-model="edit_title"
+                                        outline
+                                        color="grey">
+                                    </v-text-field>
+                                    <v-text-field
+                                        label="Author"
+                                        v-model="edit_author"
+                                        outline
+                                        color="grey">
+                                    </v-text-field>
+                                    <v-select
+                                        :items="categories"
+                                        v-model="edit_category"
+                                        outline
+                                        color="grey"
+                                        label="Select a category">
+                                    </v-select>
+                                    <v-text-field
+                                        label="Image Link"
+                                        v-model="edit_image"
+                                        outline
+                                        color="grey">
+                                    </v-text-field>
+                                    <v-textarea
+                                        outline
+                                        v-model="edit_text"
+                                        label="Text"
+                                        color="grey">
+                                    </v-textarea>
+                                </v-card-text>
+                                <v-card-actions>
+                                    <v-btn block @click="updatePost()">save changes</v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-flex>
+                        <v-flex xs3></v-flex>
+                    </v-layout>
+                </v-container>
+                <v-container v-if="page == 'login'">
+                    <v-layout>
+                        <v-flex xs3></v-flex>
+                        <v-flex xs6>
+                            <v-card elevation="18">
+                                <v-card-title class="display-1 justify-center">Login</v-card-title>
+                                <v-card-text>
+                                    <v-text-field
+                                        label="Username"
+                                        v-model="username"
+                                        outline
+                                        color="grey">
+                                    </v-text-field>
+                                    <v-text-field
+                                        label="Password"
+                                        v-model="password"
+                                        outline
+                                        color="grey">
+                                    </v-text-field>
+                                </v-card-text>
+                                <v-card-actions>
+                                    <v-btn block @click="login()">login</v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-flex>
+                        <v-flex xs3></v-flex>
+                    </v-layout>
+                </v-container>
+                <v-container v-if="page == 'register'">
+                    <v-layout>
+                        <v-flex xs3></v-flex>
+                        <v-flex xs6>
+                            <v-card elevation="18">
+                                <v-card-title class="display-1 justify-center">Register</v-card-title>
+                                <v-card-text>
+                                    <v-text-field
+                                        label="Username"
+                                        v-model="username"
+                                        outline
+                                        color="grey">
+                                    </v-text-field>
+                                    <v-text-field
+                                        label="Password"
+                                        v-model="password"
+                                        outline
+                                        color="grey">
+                                    </v-text-field>
+                                </v-card-text>
+                                <v-card-actions>
+                                    <v-btn block @click="register()">register</v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-flex>
+                        <v-flex xs3></v-flex>
+                    </v-layout>
+                </v-container>
+                <!--
+                <div v-if="page == 'post'">
+                    <div>Create Post</div>
+                    Enter title: <input v-model="new_title" type="text"> <br>
+                    Enter author: <input v-model="new_author" type="text"> <br>
+                    Pick a category:
+                    <select v-model="new_category">
+                        <option 
+                            v-for="category in categories"
+                            v-bind:value="category">
+                            {{category}}
+                        </option>
+                    </select> <br>
+                    Enter an image link: <input v-model="new_image" type="text"> <br>
+                    Enter text: <textarea v-model="new_text" type="text"></textarea> <br>
+                    <button v-on:click="addPost()">post</button>
+                </div> -->
+            </v-content>
+        </v-app>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.js"></script>
+    <script src="code.js"></script>
+    </html>
+
+
+
+
+
+    <!-- <v-btn :loading="loading" @click="loading = !loading">click me</v-btn>
+    <v-btn dark>click me</v-btn>
+    <v-btn dark color="red">click me</v-btn>
+    <v-btn depressed>click me</v-btn>
+    <v-btn fab>hi</v-btn>
+    <v-btn flat>click me</v-btn>
+    <v-btn icon dark v-on:click="alert('you liked the photo')">
+        <v-icon color="red">favorite</v-icon>
+    </v-btn>
+    <v-btn large>click me</v-btn>
+    <v-btn small>click me</v-btn>
+    <v-btn fab dark color="teal">
+        <v-icon dark>list</v-icon>
+    </v-btn>
+
+    <div class="teal lighten-3 lime--text text--darken-2">Hello</div>
+    <div class="display-4 text-uppercase font-weight-black">This is my sentence.</div>
+    <div class="display-3 font-weight-bold">This is my sentence.</div>
+    <div class="display-2 font-weight-medium">This is my sentence.</div>
+    <div class="display-1 font-weight-thin">This is my sentence.</div>
+    <div class="headline text-capitalize">This is my sentence.</div>
+    <div class="title text-uppercase">This is my sentence.</div>
+    <div class="subheading">This is my sentence.</div>
+    <div class="body-2">This is my sentence.</div>
+    <div class="body-1">This is my sentence.</div>
+    <div class="caption">This is my sentence.</div>
+
+    <v-container grid-list-lg>
+        <v-layout>
+            <v-flex xs6 lg3>
+                <v-card color="blue">
+                    <v-card-text>6</v-card-text>
+                </v-card>
+            </v-flex>
+            <v-flex xs6 lg9>
+                <v-card color="blue">
+                    <v-card-text>6</v-card-text>
+                </v-card>
+            </v-flex>
+        </v-layout>
+    </v-container> -->
