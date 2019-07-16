@@ -1,9 +1,13 @@
 const express = require("express");
+const passport = require("passport");
+const bcrypt = require("bcryptjs");
 
-var userRouter = express.Router();
+var userModel = require("../models/user.js");
+
+var usersRouter = express.Router();
 
 // Register
-userRouter.post("/register", function(req, res) {
+usersRouter.post("/register", function(req, res) {
     userModel.findOne({
         username: req.body.username
     }).then(function(user) {
@@ -36,7 +40,7 @@ userRouter.post("/register", function(req, res) {
 });
 
 // Login
-userRouter.post("/login",
+usersRouter.post("/login",
     passport.authenticate("local", { failureRedirect: "/users/login/error" }),
     function(req, res, next) {
         res.redirect("/users/login/success");
@@ -44,16 +48,18 @@ userRouter.post("/login",
 );
 
 // Login error and success
-userRouter.get("/login/error", function(req, res) {
+usersRouter.get("/login/error", function(req, res) {
+    res.status(403); // forbidden
     res.json({
         msg: "Invalid username or password"
     });
 });
 
-userRouter.get("/login/success", function(req, res) {
+usersRouter.get("/login/success", function(req, res) {
     res.json({
-        msg: `Welcome ${req.user.username}`
+        // msg: `Welcome ${req.user.username}`
+        msg: "hello there"
     });
 });
 
-module.exports = userRouter;
+module.exports = usersRouter;
