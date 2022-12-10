@@ -21,7 +21,7 @@
   "homepage": "https://github.com/16andrewtaylor/first_deploy_server#readme",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
